@@ -30,10 +30,16 @@ function todoApp(state = initialState, action) {
         ...state,
         notes: action.notes,
       };
+    case types.ADD_NOTE:
+      return {
+        ...state,
+        notes: [].append(state.notes).append(action.note),
+      };
+    case types.DELETE_NOTE:
+      return {
+        
+      }
     default:
-      break;
+      return state; // Do nothing if unknown action
   }
-  // For now, don't handle any actions
-  // and just return the state given to us.
-  return state;
 }
