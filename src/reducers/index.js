@@ -23,22 +23,37 @@ const initialState = {
   },
 };
 
-function todoApp(state = initialState, action) {
+function notes(state = { general: [] }, action) {
   switch (action.type) {
-    case types.GET_NOTES:
-      return {
-        ...state,
-        notes: action.notes,
-      };
+    case types.GET_NOTES: // TODO: I don't think this is needed
+      return state;
     case types.ADD_NOTE:
       return {
         ...state,
-        notes: [].append(state.notes).append(action.note),
+        notes: [].append(state).append(action.note), // TODO: Find a way to assign new memory while modifying nested object
       };
     case types.DELETE_NOTE:
       return {
-        
-      }
+        notes: state.filter(note => note.title !== action.noteTitle),
+      };
+    default:
+      return state;
+  }
+}
+
+function todoApp(state = initialState, action) {
+  switch (action.type) {
+    case types.GET_NOTES:
+      return state;
+    case types.ADD_NOTE:
+      return {
+        ...state,
+        notes: notes(state.notes, action),
+      };
+    case types.DELETE_NOTE:
+      return {
+        notes: notes(state.notes, action),
+      };
     default:
       return state; // Do nothing if unknown action
   }
