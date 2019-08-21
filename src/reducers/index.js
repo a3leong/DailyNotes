@@ -27,11 +27,15 @@ function notes(state = { general: [] }, action) {
   switch (action.type) {
     case types.GET_NOTES: // TODO: I don't think this is needed
       return state;
-    case types.ADD_NOTE:
+    case types.ADD_NOTE: {
+      const updatedNotes = Object.assign(...state); // This is an array of objects, the copy is looking bad here
+      updatedNotes[action.label].append(action.note);
+
       return {
         ...state,
-        notes: [].append(state).append(action.note), // TODO: Find a way to assign new memory while modifying nested object
+        notes: updatedNotes,
       };
+    }
     case types.DELETE_NOTE:
       return {
         notes: state.filter(note => note.title !== action.noteTitle),
