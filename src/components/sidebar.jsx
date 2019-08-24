@@ -12,7 +12,7 @@ export default function Sidebar() {
   return (
     <div className={sidebarClass}>
       <div className={styles.header} onClick={() => setSidebarIsOpen(!sidebarIsOpen)}>
-        <div>Groups</div>
+        <div>Labels</div>
         <div>{sidebarIsOpen ? '<' : '>'}</div>
       </div>
       <div className={styles.content}>

@@ -21,6 +21,8 @@ note: { // List of notes
 
  */
 
+// TODO: We want to convert this to a promise/callback library
+
 const SESSION_TIMEOUT = 24; // In hours. TODO: Move to a config file or let the user set
 
 
@@ -47,13 +49,19 @@ export function clearSession(override = false) {
   return false;
 }
 
+export function addNote(label, note) {
+  const notes = JSON.parse(localStorage.getItem('notes'));
+  notes[label].push(note);
+  localStorage.setItem('notes', JSON.stringify(notes));
+}
+
 function initSession() {
   localStorage.setItem('sessionTimestamp', Date().getMilliseconds());
-  localStorage.setItem('notes', { general: [] }); // start off with only one type of note
+  localStorage.setItem('notes', JSON.stringify({ general: [] })); // start off with only one type of note
 }
 
 export function getSession() {
-  if (!localStorage.getItem('notes')) {
+  if (!localStorage.getItem('notes')) { // Notes is our only data object now, 
     initSession();
   }
 

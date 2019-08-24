@@ -14,7 +14,8 @@ note: { // List of notes
  */
 
 import * as types from '../constants/ActionTypes';
-import { getNotes } from '../actions';
+// import { getNotes } from '../actions';
+import { addNote, getNotes } from '../apis/web-storage-apis';
 
 const initialState = {
   sessionTimestamp: Date().getMilliseconds(),
@@ -26,10 +27,15 @@ const initialState = {
 function notes(state = { general: [] }, action) {
   switch (action.type) {
     case types.GET_NOTES: // TODO: I don't think this is needed
-      return state;
+      return {
+        ...state,
+        notes: getNotes(),
+      };
     case types.ADD_NOTE: {
-      const updatedNotes = Object.assign(...state); // This is an array of objects, the copy is looking bad here
+      // This is an array of objects, the copy is looking bad here
+      const updatedNotes = Object.assign(...state);
       updatedNotes[action.label].append(action.note);
+      addNote(action.label, action.note);
 
       return {
         ...state,
