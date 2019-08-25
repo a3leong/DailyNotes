@@ -1,7 +1,4 @@
 import * as types from '../constants/ActionTypes';
-export const DELETE_NOTE = 'DELETE_NOTE';
-export const UPDATE_NOTE = 'UPDATE_NOTE';
-export const GET_NOTES = 'GET_NOTES';
 
 export function addNote(label, note) {
   return {
@@ -19,16 +16,56 @@ export function deleteNote(label, noteTitle) {
   };
 }
 
-export function updateNote(label, note) {
+export function updateNote(id, label, note) {
   return {
     type: types.UPDATE_NOTE,
+    id,
     label,
     note,
   };
 }
 
-export function getNotes() {
+export function requestLabels() {
+  return {
+    type: types.GET_LABELS,
+  };
+}
+
+export function recieveLabels(labels) {
+  return {
+    type: types.RECIEVE_LABELS,
+    labels,
+  };
+}
+
+export function requestNotes(label) {
   return {
     type: types.GET_NOTES,
+    label,
+  };
+}
+
+export function recieveNotes(label, notes) {
+  return {
+    type: types.RECIEVE_LABELS,
+    label,
+    notes,
+  };
+}
+
+export function selectLabel(label) {
+  return {
+    type: types.SELECT_LABEL,
+    label,
+  };
+}
+
+/* Thunk action creators */
+export function fetchNotes(label) {
+  return (dispatch) => {
+    dispatch(requestNotes(label)).then(
+      notes => dispatch(recieveNotes(label, notes)),
+      err => console.log('Error on fetchNotes', err),
+    );
   };
 }

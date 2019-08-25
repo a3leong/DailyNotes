@@ -12,59 +12,78 @@ note: { // List of notes
 
 
  */
-
+import { combineReducers } from 'redux';
 import * as types from '../constants/ActionTypes';
-// import { getNotes } from '../actions';
-import { addNote, getNotes } from '../apis/web-storage-apis';
 
 const initialState = {
-  sessionTimestamp: Date().getMilliseconds(),
+  sessionTimestamp: Date.now(),
   notes: {
-    general: [],
+    general: {
+      isFetching: true,
+      items: [],
+    },
   },
+  sidebar: {
+    isFetching: true,
+    labels: [
+      { label: 'General', key: 'general' },
+    ],
+  },
+  selectedLabelKey: 'general',
 };
 
-function notes(state = { general: [] }, action) {
+function selectedLabelKey(state = initialState.selectedLabelKey, action) {
   switch (action.type) {
-    case types.GET_NOTES: // TODO: I don't think this is needed
+    case types.SELECT_LABEL:
       return {
         ...state,
-        notes: getNotes(),
-      };
-    case types.ADD_NOTE: {
-      // This is an array of objects, the copy is looking bad here
-      const updatedNotes = Object.assign(...state);
-      updatedNotes[action.label].append(action.note);
-      addNote(action.label, action.note);
-
-      return {
-        ...state,
-        notes: updatedNotes,
-      };
-    }
-    case types.DELETE_NOTE:
-      return {
-        notes: state.filter(note => note.title !== action.noteTitle),
+        selectedLabelKey: action.label,
       };
     default:
       return state;
   }
 }
 
-function todoApp(state = initialState, action) {
+function sidebar(state = initialState.sidebar, action) {
   switch (action.type) {
-    case types.GET_NOTES:
+    case types.REQUEST_LABELS:
+    case types.RECIEVE_LABELS:
+    default:
       return state;
+  }
+}
+
+function notes(state = initialState.notes, action) {
+  switch (action.type) {
+    case types.REQUEST_NOTES:
+      return {
+        ...state,
+        [action.label]: { isFetching: true, items: [] },
+      };
+    case types.RECIEVE_NOTES:
+      return {
+        ...state,
+        [action.label]: { isFetching: false, items: action.notes },
+      };
     case types.ADD_NOTE:
       return {
         ...state,
-        notes: notes(state.notes, action),
+        [action.label]: { isFetching: false, items: action.notes },
       };
     case types.DELETE_NOTE:
       return {
-        notes: notes(state.notes, action),
+        ...state,
+        [action.label]: { isFetching: false, items: action.notes },
       };
     default:
-      return state; // Do nothing if unknown action
+      return state;
   }
 }
+
+const rootReducer = combineReducers({
+  sidebar,
+  notes,
+  selectedLabelKey,
+});
+
+export default rootReducer;

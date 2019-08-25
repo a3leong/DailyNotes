@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import styles from './Sidebar.module.scss';
 
 export default function Sidebar() {
+  const labels = useSelector(state => state.sidebar.labels);
+
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const sidebarClass = classNames({
     [styles.Sidebar]: true,
@@ -16,7 +19,11 @@ export default function Sidebar() {
         <div>{sidebarIsOpen ? '<' : '>'}</div>
       </div>
       <div className={styles.content}>
-          Sidebar content goes here
+        {
+          labels.map(labelObj => (
+            <div key={labelObj.key}>{labelObj.label}</div>
+          ))
+        }
       </div>
     </div>
   );
