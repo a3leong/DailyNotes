@@ -72,7 +72,7 @@ function initSession() {
   *              if at least designated time has not passed (should be 24hrs)
   * Return Value: Returns true if succeeded, false if it did not
   */
- export async function clearSession(override = false) {
+export async function clearSession(override = false) {
   if (override !== false && sessionOutdated()) {
     localStorage.clear();
     await initSession();
