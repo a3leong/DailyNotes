@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
+import { fetchNotes } from '../actions';
 import styles from './Sidebar.module.scss';
 
 export default function Sidebar() {
+  const dispatch = useDispatch();
+
+  dispatch(() => fetchNotes('general'));
+  // dispatch(fetchNotes('general')).then(() => console.log(store.getState()));
+
   const labels = useSelector(state => state.sidebar.labels);
 
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);

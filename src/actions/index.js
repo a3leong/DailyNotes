@@ -1,4 +1,5 @@
 import * as types from '../constants/ActionTypes';
+import { getNotes } from '../apis/web-storage-apis';
 
 export function addNote(label, note) {
   return {
@@ -27,7 +28,7 @@ export function updateNote(id, label, note) {
 
 export function requestLabels() {
   return {
-    type: types.GET_LABELS,
+    type: types.REQUEST_LABELS,
   };
 }
 
@@ -39,8 +40,9 @@ export function recieveLabels(labels) {
 }
 
 export function requestNotes(label) {
+  console.log('request notes called');
   return {
-    type: types.GET_NOTES,
+    type: types.REQUEST_NOTES,
     label,
   };
 }
@@ -62,8 +64,11 @@ export function selectLabel(label) {
 
 /* Thunk action creators */
 export function fetchNotes(label) {
+  console.log('fetch notes called');
   return (dispatch) => {
-    dispatch(requestNotes(label)).then(
+    console.log('dispatch called');
+    dispatch(requestNotes(label));
+    return getNotes.then(
       notes => dispatch(recieveNotes(label, notes)),
       err => console.log('Error on fetchNotes', err),
     );

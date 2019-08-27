@@ -60,7 +60,7 @@ function initSession() {
     localStorageSetItem(LS_KEYS.SESSION_TIME_STAMP, Date.now());
     localStorageSetItem(LS_KEYS.ID_COUNTER, 1);
     localStorageSetItem(LS_KEYS.LABELS, [{ label: 'General', key: 'notes-general' }]);
-    localStorageSetItem(LS_KEYS.NOTES, [{ _id: 0, type: 'basic', data: 'Hello world!' }]); // start off with only one type of note
+    localStorageSetItem('notes-general', [{ _id: 0, type: 'basic', data: 'Hello world!' }]); // start off with only one type of note
     return Promise.resolve();
   } catch (err) {
     return Promise.reject(err);
@@ -83,6 +83,7 @@ function initSession() {
   return false;
 }
 
+// TODO: What is this even used for, delete this?
 export function getSession() {
   if (!localStorage.getItem(LS_KEYS.NOTES)) {
     return initSession();
@@ -113,9 +114,10 @@ export function addNote(label, note) {
 }
 
 export function getNotes(label) {
+  console.log(`get notes: ${label} called`);
   try {
     const notes = localStorageGetItem(`notes-${label}`);
-    return promised.resolve(notes);
+    return Promise.resolve(notes);
   } catch (err) {
     return Promise.reject(err);
   }
